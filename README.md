@@ -9,7 +9,7 @@
 [![Variant](https://img.shields.io/badge/variant-PassWall%201-orange?style=for-the-badge)](firmware/devices/zte-mf286d/variants/passwall1/firmware.json)
 [![License](https://img.shields.io/badge/license-GPL--2.0-orange?style=for-the-badge)](#license)
 
-![NoobWRT](/images/logo.png)
+![ZTE MF286D](/images/mf286d.png)
 
 [Features](#-features) · [Install](#-quick-install) · [Device defaults](#-device-defaults) · [Documentation](#-documentation) · [Support](#-support)
 
