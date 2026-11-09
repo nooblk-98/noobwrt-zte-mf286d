@@ -26,6 +26,35 @@ OpenWrt maps the ports as follows:
 - `wan6` → DHCPv6 on `wan`
 - LTE → `wan` as QMI on `/dev/cdc-wdm0` in the shipped config
 
+## Flash and image size budget
+
+| Region | Size | Used by |
+|---|---|---|
+| NAND total | 128 MiB | whole device |
+| SPI NOR | 2 MiB | bootloader (`SBL1`, `MIBIB`, `QSEE`, `APPSBL`) |
+| `rootfs` (mtd9) | **29.00 MiB** (30,408,704 B) | kernel + OpenWrt rootfs + overlay |
+| `data` (mtd10) | 25 MiB | stock data; unused by OpenWrt |
+| `fota` (mtd11) | 50 MiB | stock FOTA; unused by OpenWrt |
+
+The `rootfs` partition is a UBI volume: 232 PEBs of 128 KiB, 2 reserved, so
+**230 LEBs × 126,976 B = 27.85 MiB** of usable space. The kernel is stored
+uncompressed (≈3.3 MiB in the reference image), which leaves:
+
+| Overlay wanted | Max rootfs (squashfs) |
+|---|---|
+| 0 MiB | 24.57 MiB |
+| 2 MiB | 22.57 MiB |
+| 4 MiB | 20.57 MiB |
+| 6 MiB | 18.57 MiB |
+| 8 MiB | 16.57 MiB |
+
+Practical target for this build: **rootfs ≤ 20 MiB**, leaving ~4 MiB of overlay
+for settings. The release hook fails the build above 27.85 MB of image payload and
+warns above 25.5 MB.
+
+For reference, the packages that will not fit: `sing-box` alone is 15.3 MiB and
+`xray-core` is 10.8 MiB compressed, so only one proxy core is shipped.
+
 ## Known hardware limits
 
 - Many LEDs are driven by the modem firmware, not the CPU. Only internal and Wi-Fi

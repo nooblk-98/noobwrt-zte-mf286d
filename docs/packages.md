@@ -7,9 +7,15 @@ OpenWrt `ipq40xx/generic` `zte_mf286d` profile.
 The profile itself already adds `kmod-usb-net-qmi-wwan`, `kmod-usb-serial-option`
 and `uqmi`.
 
+!!! warning "Size budget"
+    The MF286D has a **29 MiB** firmware partition (about 24.5 MiB usable for the
+    rootfs after the kernel). The build is deliberately slim: Xray is the only
+    proxy core, and there are no NAS, Samba, NFS, media-server or desktop CLI
+    packages. See [Hardware](hardware.md#flash-and-image-size-budget).
+
 ## Added packages
 
-### LuCI and management
+### LuCI and theme
 
 ```text
 luci
@@ -54,18 +60,14 @@ ath10k-firmware-qca4019-ct
 wpad-mbedtls
 ```
 
-### PassWall 1 stack
+### PassWall 1 (Xray only)
 
 ```text
-haproxy
 chinadns-ng
 dns2socks
 dns2tcp
 microsocks
-sing-box
 xray-core
-v2ray-geoip
-v2ray-geosite
 tcping
 resolveip
 ```
@@ -95,57 +97,36 @@ nftables
 ip-full
 ```
 
-### Tuning and tunnels
+### Tunnels and tuning
 
 ```text
 kmod-wireguard
 wireguard-tools
-kmod-sched
-kmod-netem
-kmod-tcp-bbr
 kmod-tun
+kmod-tcp-bbr
 ```
 
-### Storage / system
+### System
 
 ```text
-block-mount
 odhcp6c
 odhcpd-ipv6only
 ppp
 ppp-mod-pppoe
 mtd
 uboot-envtools
-openssh-sftp-server
 ```
 
-### CLI tools
+### Small CLI tools
 
 ```text
 curl
 wget-ssl
 ca-bundle
 jq
-tcpdump
-less
-nano
-htop
-bash
-coreutils
-coreutils-base64
-coreutils-nohup
-coreutils-sort
-coreutils-stty
-gawk
-grep
-sed
-unzip
-ethtool-full
 ```
 
 ## Removed packages
-
-These are disabled so the PassWall 1 stack owns the firewall/DNS path:
 
 ```text
 dnsmasq
@@ -163,14 +144,19 @@ luci-app-https-dns-proxy
 wpad-basic-mbedtls
 ```
 
+## Deliberately not included
+
+| Package | Why |
+|---|---|
+| `sing-box`, `v2ray-geoip`, `v2ray-geosite`, `haproxy` | ~21 MiB together; would not fit |
+| `luci-app-modemband` | no maintained source feed for 25.12 (config kept) |
+| `apn-web`, `telegramWrt` | binary-only upstream; APN page ships in the overlay |
+| samba4, nfs, minidlna, filemanager, sftp-server | NAS features not wanted on this build |
+| bash, coreutils, htop, tcpdump, gawk, nano, less, unzip, ethtool-full | desktop conveniences, cut to protect the size budget |
+
 ## Notes
 
-- `dnsmasq-full` replaces `dnsmasq` so PassWall's `ipset`/`nftset` support works.
-- `wpad-mbedtls` replaces `wpad-basic-mbedtls` for WPA3 and 802.11w support.
-- `luci-theme-noobwrt` is the default theme; `/etc/config/luci` points `mediaurlbase` at
-  `/luci-static/noobwrt` and `etc/uci-defaults/30_luci-theme-noobwrt` seeds the toolbar.
-- The reference image also included `luci-app-modemband`, `apn-web` and
-  `telegramWrt`. `luci-app-modemband` has no maintained source feed for 25.12, and
-  `apn-web` / `telegramWrt` are binary-only; the APN page assets are shipped in the
-  overlay instead, and `/etc/config/modemband` is kept so band settings survive if
-  you install the app later.
+- `dnsmasq-full` replaces `dnsmasq` so PassWall's nftset support works.
+- `wpad-mbedtls` replaces `wpad-basic-mbedtls` for WPA3 and 802.11w.
+- `luci-theme-noobwrt` is the default theme; `/etc/config/luci` points
+  `mediaurlbase` at `/luci-static/noobwrt`.

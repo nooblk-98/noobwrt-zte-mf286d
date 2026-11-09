@@ -48,7 +48,8 @@ This repository ships one reviewed variant: **ZTE MF286D / PassWall 1**.
 - **Cellular modem management** via ModemManager, QMI/MBIM protocols, `sms-tool-js` and `3ginfo-lite`
 - **APN web page** at `http://192.168.1.1/apn.html` for quick APN / PDP changes
 - **WireGuard**, `dnsmasq-full`, nftables firewall4 and PassWall's tproxy kernel modules
-- **Monitoring and tooling:** `htop`, `tcpdump`, `jq`, `curl`, `wget-ssl`, `bash`, coreutils
+- **Lean footprint** for the 29 MiB firmware partition — no NAS/Samba/media packages
+- **Small toolset:** `jq`, `curl`, `wget-ssl`, `wireguard-tools`
 - **SMS LED helper** and band-lock defaults carried over from the reference MF286D image
 - **NoobWRT theme** enabled by default (toolbar tuned to this build's apps)
 
