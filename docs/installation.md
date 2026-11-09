@@ -114,9 +114,35 @@ that container first.
     unbootable. Without a serial cable there is no recovery path — have the
     [UART guide](uart-guide.md) ready before you start.
 
+### Connection: LAN cable, not Wi-Fi
+
+The ZTE tool talks to the router over the wired management interface, so:
+
+- Connect the PC to a **LAN port of the router with an Ethernet cable**.
+- **Disable the PC's Wi-Fi adapter** before running the tool (Windows: Control Panel
+  → Network and Internet → Network and Sharing Center → Change adapter settings →
+  right-click Wi-Fi → Disable). Two active paths confuse the tool and the update
+  server.
+- Temporarily disable antivirus/firewall prompts while the tool runs.
+- Leave the PC on DHCP; the tool finds the router itself.
+- Do **not** use Wi-Fi for the flash itself — the radio goes down during the reboot
+  and the update would stall.
+
+!!! warning "Move the cable after the flash"
+    On stock ZTE firmware all four ports are LAN. In OpenWrt **`lan1` becomes the
+    WAN port**, and only `lan2`, `lan3`, `lan4` are LAN. After the router reboots,
+    move the cable to `lan2`/`lan3`/`lan4` before opening `http://192.168.1.1`.
+
+### Prerequisite: Nordic firmware
+
+The community package is built for **Nordic/Telia** units. If your MF286D runs a
+carrier firmware (TIM, H3G, etc.), install the Nordic firmware first — the OpenWrt
+container is only accepted from that base. The Nordic images are on the same blog
+that documents this method.
+
 ### What you need
 
-1. A Windows PC.
+1. A Windows PC with an Ethernet port.
 2. The community package `zte mf286d Nordic to OPENWRT.7z.001 … .007` (~370 MB).
    It contains `ZTE_Sales_Update_Framework.exe` and the original `root_uImage`.
    Sources: [makebit/mf286d-openwrt](https://github.com/makebit/mf286d-openwrt)
