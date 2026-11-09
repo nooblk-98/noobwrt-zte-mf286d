@@ -1,0 +1,63 @@
+# FAQ
+
+## What is NoobWRT?
+
+NoobWRT is a curated OpenWrt firmware build for the ZTE MF286D. It provides
+predictable defaults, PassWall 1, modem tooling and a small, maintained package
+set.
+
+## Which firmware file should I download?
+
+Use the `sysupgrade` image from a maintainer build:
+
+`openwrt-ipq40xx-generic-zte_mf286d-squashfs-sysupgrade.bin`
+
+See [Releases](builds.md).
+
+## Is there a PassWall 2 build?
+
+No. This repository ships only the **passwall1** variant.
+
+## Why is the Wi-Fi country `IT`?
+
+The device overlay mirrors the reference ZTE MF286D image, which was built for
+Italy. Change the country in `Network` → `Wireless` before using the router
+elsewhere.
+
+## Why is there no phone (VoIP) support?
+
+The MF286D has no working VoIP support in OpenWrt. This is an upstream hardware
+limitation, not a NoobWRT choice.
+
+## Can I use the Ethernet WAN instead of LTE?
+
+Yes. `lan1` is the WAN port. Set `network.wan` to `proto dhcp` on device `lan1`, or
+configure PPPoE there. The LTE modem then stays available as a second interface.
+
+## Is it safe to flash this firmware?
+
+Flashing firmware carries risk. Follow [Installation](installation.md) and ensure
+stable power. Recovery is possible over UART/TFTP (see [Recovery](recovery.md)).
+
+## Can I revert to stock firmware?
+
+Only if you backed up the original partitions. This repository does not ship a
+stock-restore image. See [Recovery](recovery.md#returning-to-stock).
+
+## How do I lock LTE bands?
+
+The reference image used `luci-app-modemband`, which is not part of this build.
+You can still query and set bands manually with the modem AT port:
+
+```sh
+# show current bands (example AT port)
+gcom -d /dev/ttyUSB1
+> AT+ZNLOCKBAND?
+```
+
+Install `luci-app-modemband` from a compatible feed if you want the LuCI page.
+
+## How do I change the UI theme?
+
+`System` → `System` → `Language and Style` → `Design`. Only the bootstrap theme is
+installed by default.

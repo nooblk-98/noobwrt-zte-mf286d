@@ -1,0 +1,27 @@
+#!/bin/sh
+echo "Content-Type: application/json"
+echo ""
+
+read input
+action=$(echo "$input" | grep -o '"action":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+
+case "$action" in
+  restart_wan)
+    proto=$(uci get network.wan.proto 2>/dev/null)
+    if [ "$proto" = "qmi" ] || [ "$proto" = "modemmanager" ] || [ "$proto" = "mbim" ]; then
+      ubus call network.interface.wan down >/dev/null 2>&1
+      sleep 1
+      ubus call network.interface.wan up >/dev/null 2>&1
+      echo '{"status":"ok","message":"Interfaccia WAN riavviata correttamente"}'
+    else
+      echo '{"status":"error","message":"WAN non configurata con QMI, ModemManager o MBIM"}'
+    fi
+    ;;
+  reboot_router)
+    echo '{"status":"ok","message":"Riavvio del router avviato correttamente"}'
+    (sleep 1; reboot) &
+    ;;
+  *)
+    echo '{"status":"error","message":"Azione non riconosciuta"}'
+    ;;
+esac

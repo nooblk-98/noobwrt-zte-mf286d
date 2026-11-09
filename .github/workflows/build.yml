@@ -1,0 +1,60 @@
+name: Build Firmware
+on:
+  workflow_dispatch:
+    inputs:
+      device:
+        description: Device definition ID
+        type: string
+        default: zte-mf286d
+        required: true
+      variant:
+        description: Firmware variant
+        type: choice
+        options:
+          - passwall1
+        default: passwall1
+        required: true
+      validate_only:
+        description: Validate dispatch roundtrip without compiling
+        type: boolean
+        default: true
+      clean:
+        description: Clean selected isolated build tree
+        type: boolean
+        default: false
+      verbose:
+        description: Detailed compilation logs
+        type: boolean
+        default: false
+      build_tag:
+        description: Unique unused Drive folder tag (letters, digits, dots, hyphens, underscores; start alphanumeric; max 80)
+        type: string
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: firmware-request-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  request:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 315
+    outputs:
+      request_id: ${{ steps.build.outputs.request_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Request build and verify exact result
+        id: build
+        env:
+          BUILDER_TOKEN: ${{ secrets.TOKEN }}
+          DEVICE: ${{ inputs.device }}
+          VARIANT: ${{ inputs.variant }}
+          VALIDATE_ONLY: ${{ inputs.validate_only }}
+          CLEAN: ${{ inputs.clean }}
+          VERBOSE: ${{ inputs.verbose }}
+          BUILD_TAG: ${{ inputs.build_tag }}
+          DRIVE_ROOT_FOLDER_ID: ${{ vars.DRIVE_ROOT_FOLDER_ID }}
+        run: python3 scripts/dispatch_build.py

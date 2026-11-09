@@ -1,0 +1,31 @@
+#!/bin/sh
+
+INTERFACE="wan"
+
+# Verifica se l'interfaccia esiste su ubus
+if ! ubus list | grep -q "network.interface.$INTERFACE"; then
+  echo "Content-Type: application/json"
+  echo ""
+  echo '{"error":"Impossibile impostare rete WAN: interfaccia non trovata o disabilitata."}'
+  exit 1
+fi
+
+# Verifica se l'interfaccia WAN è parte di un bridge
+DEV=$(uci get network.$INTERFACE.device 2>/dev/null)
+[ -z "$DEV" ] && DEV=$(uci get network.$INTERFACE.ifname 2>/dev/null)
+
+if [ -n "$DEV" ] && ip link show "$DEV" 2>/dev/null | grep -q "BRIDGE"; then
+  echo "Content-Type: application/json"
+  echo ""
+  echo '{"error":"Impossibile impostare rete WAN: interfaccia inserita in un bridge ('"$DEV"')."}'
+  exit 1
+fi
+
+# Riavvia l'interfaccia WAN
+ubus call network.interface down "{\"interface\":\"$INTERFACE\"}"
+sleep 1
+ubus call network.interface up "{\"interface\":\"$INTERFACE\"}"
+
+echo "Content-Type: application/json"
+echo ""
+echo '{"message":"Interfaccia WAN riavviata correttamente"}'

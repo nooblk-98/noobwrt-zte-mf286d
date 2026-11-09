@@ -1,0 +1,59 @@
+#!/bin/sh
+echo "Content-Type: application/json"
+echo ""
+
+read input
+
+# Estrai parametri dal JSON (usa un approccio più robusto con grep + cut)
+apn=$(echo "$input" | grep -o '"apn":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+pdptype=$(echo "$input" | grep -o '"pdptype":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+pincode=$(echo "$input" | grep -o '"pincode":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+auth=$(echo "$input" | grep -o '"auth":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+
+# Imposta auth a "none" se non fornito o vuoto
+if [ -z "$auth" ]; then
+  auth="none"
+fi
+
+# Valida il valore di auth (opzionale ma sicuro)
+case "$auth" in
+  none|pap|chap)
+    # Valido
+    ;;
+  *)
+    echo '{"status":"error","message":"Valore di autenticazione non valido. Usare: none, pap, chap"}'
+    exit 1
+    ;;
+esac
+
+# Verifica presenza QMI
+proto=$(uci get network.wan.proto 2>/dev/null)
+device=$(uci get network.wan.device 2>/dev/null)
+
+if [ "$proto" != "qmi" ]; then
+  echo '{"status":"error","message":"QMI non disponibile"}'
+  exit 1
+fi
+
+if [ ! -e "$device" ] || ! echo "$device" | grep -q "cdc-wdm"; then
+  echo '{"status":"error","message":"Interfaccia QMI non presente"}'
+  exit 1
+fi
+
+# Imposta configurazione WAN
+uci set network.wan.proto='qmi'
+uci set network.wan.device='/dev/cdc-wdm0'
+uci set network.wan.apn="$apn"
+uci set network.wan.pdptype="$pdptype"
+uci set network.wan.auth="$auth"  # <-- AGGIUNTO
+
+if [ -n "$pincode" ]; then
+  uci set network.wan.pincode="$pincode"
+else
+  uci delete network.wan.pincode 2>/dev/null
+fi
+
+uci commit network
+/etc/init.d/network reload >/dev/null 2>&1
+
+echo "{\"status\":\"ok\",\"message\":\"Configurazione applicata\",\"device\":\"/dev/cdc-wdm0\",\"auth\":\"$auth\"}"

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurazione APN</title>
+  <style>
+    body {
+      font-family: "Lucida Grande", "Verdana", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0 auto;
+      padding: 20px;
+      max-width: 700px;
+    }
+
+    h1, h2 {
+      font-weight: normal;
+      color: #2e3b4e;
+      margin-bottom: 10px;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: #fff;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    select:focus, input:focus {
+      border-color: #5b9dd9;
+      outline: none;
+      box-shadow: 0 0 3px rgba(91, 157, 217, 0.5);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      justify-content: flex-start;
+    }
+
+    .button-row button {
+      flex: 0 0 auto;
+      padding: 6px 12px;
+      font-size: 13px;
+      min-width: 100px;
+      white-space: nowrap;
+      background-color: #4d90fe;
+      color: #fff;
+      border: 1px solid #3079ed;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .button-row button:hover {
+      background-color: #357ae8;
+      border-color: #2f5bb7;
+    }
+
+    @media (max-width: 600px) {
+      .button-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .button-row button {
+        width: 100%;
+        min-width: auto;
+        text-align: center;
+      }
+    }
+
+    .center {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .message-wrapper {
+      margin-top: 20px;
+    }
+
+    .alert {
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .apn-box {
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #2e3b4e;
+    }
+
+    .responsive-logo {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="/logo-apnweb.jpg" alt="Logo APNWeb" class="responsive-logo">
+
+  <div class="center">
+    <h2>Seleziona modalità</h2>
+    <select id="modeSelect" onchange="checkModeSelection()">
+      <option value="">-- Seleziona --</option>
+      <option value="QMI">QMI</option>
+      <option value="MODEMMANAGER">MODEMMANAGER</option>
+      <option value="MBIM">MBIM Cellular</option>
+    </select>
+  </div>
+
+  <div id="languageSelect" class="center hidden">
+    <h2>Seleziona lingua</h2>
+    <select id="langSelect" onchange="checkFormDisplay()">
+      <option value="">-- Seleziona --</option>
+      <option value="it">Italiano</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <div id="mainTitleWrapper" class="center hidden">
+    <h1 id="mainTitle">APN</h1>
+  </div>
+
+  <!-- QMI -->
+  <div id="qmiForm" class="hidden">
+    <h2 id="sectionTitle">Configurazione APN su WAN (QMI)</h2>
+
+    <label id="apnLabel" for="apnSelect">Seleziona APN</label>
+    <select id="apnSelect" onchange="updateApn()">
+      <option value="">-- Seleziona --</option>
+      <option value="ibox.tim.it">TIM</option>
+      <option value="unico.tim.it">TIM (alternativo)</option>
+      <option value="wap.tim.it">TIM WAP</option>
+      <option value="mobile.vodafone.it">Vodafone</option>
+      <option value="iphone.vodafone.it">Vodafone iPhone</option>
+      <option value="web.omnitel.it">Vodafone (storico)</option>
+      <option value="internet.wind">WindTre</option>
+      <option value="myinternet.wind">WindTre DENAT</option>
+      <option value="iliad">Iliad</option>
+      <option value="internet.it">Very Mobile</option>
+      <option value="web.ho-mobile.it">Ho Mobile</option>
+      <option value="web.kenamobile.it">Kena Mobile</option>
+      <option value="apn.fastweb.it">Fastweb</option>
+      <option value="wap.postemobile.it">PosteMobile</option>
+      <option value="internet.coopvoce.it">CoopVoce</option>
+      <option value="tiscalimobileinternet">Tiscali</option>
+      <option value="mobile.tiscali.it">Tiscali Mobile</option>
+      <option value="data.lycamobile.it">Lycamobile</option>
+      <option value="web.noitel.it">Noitel</option>
+      <option value="mobile.erg.it">Erg Mobile</option>
+      <option value="apn.vianova.it">Vianova</option>
+      <option value="internet.digi.it">Digi Mobil</option>
+      <option value="mobile.1mobile.it">1Mobile</option>
+      <option value="internet.spusu.it">Spusu</option>
+      <option value="mobile.simply.it">Simply Mobile</option>
+      <option value="wap.optima.it">Optima Mobile</option>
+      <option value="dataonly.optima.it">Optima Mobile (solo dati)</option>
+      <option value="web.unomobile.it">Uno Mobile</option>
+      <option value="wap.unomobile.it">Uno Mobile (alternativo)</option>
+      <option value="web.federmobile.it">Feder Mobile</option>
+      <option value="mobile.it">Ops! Mobile</option>
+      <option value="internet.ntmobile.it">NTMobile</option>
+      <option value="internet.btitalia.it">Green Mobile</option>
+      <option value="wap.dtm.it">Daily Telecom Mobile</option>
+    </select>
+    <div id="apnText" class="apn-box">Nessun APN selezionato.</div>
+
+    <label id="ipLabel" for="pdptype">Tipo IP</label>
+    <select id="pdptype">
+      <option value="ipv4">IPv4</option>
+      <option value="ipv6">IPv6</option>
+      <option value="ipv4v6">IPv4 + IPv6</option>
+    </select>
+
+    <label id="qmiAuthLabel" for="qmiAuth">Autenticazione</label>
+    <select id="qmiAuth">
+      <option value="none">Nessuna</option>
+      <option value="pap">PAP</option>
+      <option value="chap">CHAP</option>
+    </select>
+
+    <label id="pinLabel" for="pincode">PIN (opzionale)</label>
+    <input type="text" id="pincode" placeholder="1234">
+
+    <div class="button-row">
+      <button id="btnRestartNetwork">Riavvia WAN</button>
+      <button id="btnCopy">Copia APN</button>
+      <button id="btnReboot">Riavvia router</button>
+      <button id="btnApply">Applica configurazione</button>
+    </div>
+
+    <div class="message-wrapper">
+      <div id="applyMessage" class="alert hidden"></div>
+    </div>
+  </div>
+
+  <!-- MODEMMANAGER -->
+  <div id="modemMessage" class="hidden">
+    <h2>Configurazione MODEMMANAGER</h2>
+
+    <label for="mmApnSelect">Seleziona APN</label>
+    <select id="mmApnSelect" onchange="syncModemApn()">
+      <option value="">-- Seleziona --</option>
+      <option value="ibox.tim.it">TIM</option>
+      <option value="unico.tim.it">TIM (alternativo)</option>
+      <option value="wap.tim.it">TIM WAP</option>
+      <option value="mobile.vodafone.it">Vodafone</option>
+      <option value="iphone.vodafone.it">Vodafone iPhone</option>
+      <option value="web.omnitel.it">Vodafone (storico)</option>
+      <option value="internet.wind">WindTre</option>
+      <option value="myinternet.wind">WindTre DENAT</option>
+      <option value="iliad">Iliad</option>
+      <option value="internet.it">Very Mobile</option>
+      <option value="web.ho-mobile.it">Ho Mobile</option>
+      <option value="web.kenamobile.it">Kena Mobile</option>
+      <option value="apn.fastweb.it">Fastweb</option>
+      <option value="wap.postemobile.it">PosteMobile</option>
+      <option value="internet.coopvoce.it">CoopVoce</option>
+      <option value="tiscalimobileinternet">Tiscali</option>
+      <option value="mobile.tiscali.it">Tiscali Mobile</option>
+      <option value="data.lycamobile.it">Lycamobile</option>
+      <option value="web.noitel.it">Noitel</option>
+      <option value="mobile.erg.it">Erg Mobile</option>
+      <option value="apn.vianova.it">Vianova</option>
+      <option value="internet.digi.it">Digi Mobil</option>
+      <option value="mobile.1mobile.it">1Mobile</option>
+      <option value="internet.spusu.it">Spusu</option>
+      <option value="mobile.simply.it">Simply Mobile</option>
+    </select>
+    <input type="hidden" id="mmApn">
+    <div id="mmApnText" class="apn-box">Nessun APN selezionato.</div>
+
+    <label for="mmIpType">Tipo IP</label>
+    <select id="mmIpType">
+      <option value="ipv4">IPv4</option>
+      <option value="ipv6">IPv6</option>
+      <option value="ipv4v6">IPv4 + IPv6</option>
+    </select>
+
+    <label for="mmAuth">Autenticazione</label>
+    <select id="mmAuth">
+      <option value="none">Nessuna</option>
+      <option value="pap">PAP</option>
+      <option value="chap">CHAP</option>
+    </select>
+
+    <label for="mmMode">Tipo di connessione da usare</label>
+    <select id="mmMode">
+      <option value="5g">5G</option>
+      <option value="4g">4G</option>
+      <option value="3g">3G</option>
+      <option value="2g">2G</option>
+      <option value="auto">Auto</option>
+      <option value="any">Qualsiasi</option>
+    </select>
+
+    <label id="mmPinLabel" for="mmPincode">PIN della SIM (opzionale)</label>
+    <input type="text" id="mmPincode" placeholder="1234">
+
+    <div class="button-row">
+      <button id="btnRestartNetworkMM">Riavvia WAN</button>
+      <button id="btnCopyMM">Copia APN</button>
+      <button id="btnRebootMM">Riavvia router</button>
+      <button id="btnApplyMM">Applica configurazione</button>
+    </div>
+
+    <div class="message-wrapper">
+      <div id="mmMessage" class="alert hidden"></div>
+    </div>
+  </div>
+
+  <!-- MBIM CELLULAR -->
+  <div id="mbimForm" class="hidden">
+    <h2 id="mbimSectionTitle">Configurazione APN su WAN (MBIM)</h2>
+
+    <label id="mbimApnLabel" for="mbimApnSelect">Seleziona APN</label>
+    <select id="mbimApnSelect" onchange="updateMbimApn()">
+      <option value="">-- Seleziona --</option>
+      <option value="ibox.tim.it">TIM</option>
+      <option value="unico.tim.it">TIM (alternativo)</option>
+      <option value="wap.tim.it">TIM WAP</option>
+      <option value="mobile.vodafone.it">Vodafone</option>
+      <option value="iphone.vodafone.it">Vodafone iPhone</option>
+      <option value="web.omnitel.it">Vodafone (storico)</option>
+      <option value="internet.wind">WindTre</option>
+      <option value="myinternet.wind">WindTre DENAT</option>
+      <option value="iliad">Iliad</option>
+      <option value="internet.it">Very Mobile</option>
+      <option value="web.ho-mobile.it">Ho Mobile</option>
+      <option value="web.kenamobile.it">Kena Mobile</option>
+      <option value="apn.fastweb.it">Fastweb</option>
+      <option value="wap.postemobile.it">PosteMobile</option>
+      <option value="internet.coopvoce.it">CoopVoce</option>
+      <option value="tiscalimobileinternet">Tiscali</option>
+      <option value="mobile.tiscali.it">Tiscali Mobile</option>
+      <option value="data.lycamobile.it">Lycamobile</option>
+      <option value="web.noitel.it">Noitel</option>
+      <option value="mobile.erg.it">Erg Mobile</option>
+      <option value="apn.vianova.it">Vianova</option>
+      <option value="internet.digi.it">Digi Mobil</option>
+      <option value="mobile.1mobile.it">1Mobile</option>
+      <option value="internet.spusu.it">Spusu</option>
+      <option value="mobile.simply.it">Simply Mobile</option>
+      <option value="wap.optima.it">Optima Mobile</option>
+      <option value="dataonly.optima.it">Optima Mobile (solo dati)</option>
+      <option value="web.unomobile.it">Uno Mobile</option>
+      <option value="wap.unomobile.it">Uno Mobile (alternativo)</option>
+      <option value="web.federmobile.it">Feder Mobile</option>
+      <option value="mobile.it">Ops! Mobile</option>
+      <option value="internet.ntmobile.it">NTMobile</option>
+      <option value="internet.btitalia.it">Green Mobile</option>
+      <option value="wap.dtm.it">Daily Telecom Mobile</option>
+    </select>
+    <div id="mbimApnText" class="apn-box">Nessun APN selezionato.</div>
+
+    <label id="mbimIpLabel" for="mbimPdptype">Tipo IP</label>
+    <select id="mbimPdptype">
+      <option value="ipv4">IPv4</option>
+      <option value="ipv6">IPv6</option>
+      <option value="ipv4v6">IPv4 + IPv6</option>
+    </select>
+
+    <label id="mbimAuthLabel" for="mbimAuth">Autenticazione</label>
+    <select id="mbimAuth">
+      <option value="none">Nessuna</option>
+      <option value="pap">PAP</option>
+      <option value="chap">CHAP</option>
+    </select>
+
+    <label id="mbimPinLabel" for="mbimPincode">PIN della SIM (opzionale)</label>
+    <input type="text" id="mbimPincode" placeholder="1234">
+
+    <div class="button-row">
+      <button id="btnRestartNetworkMBIM">Riavvia WAN</button>
+      <button id="btnCopyMBIM">Copia APN</button>
+      <button id="btnRebootMBIM">Riavvia router</button>
+      <button id="btnApplyMBIM">Applica configurazione</button>
+    </div>
+
+    <div class="message-wrapper">
+      <div id="mbimMessage" class="alert hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    let selectedMode = "";
+
+    const translations = {
+      it: {
+        mainTitle: "APN",
+        sectionTitle: "Configurazione APN su WAN (QMI)",
+        mbimSectionTitle: "Configurazione APN su WAN (MBIM)",
+        apnLabel: "Seleziona APN",
+        mbimApnLabel: "Seleziona APN",
+        ipLabel: "Tipo IP",
+        mbimIpLabel: "Tipo IP",
+        pinLabel: "PIN (opzionale)",
+        mmPinLabel: "PIN della SIM (opzionale)",
+        mbimPinLabel: "PIN della SIM (opzionale)",
+        mmAuthLabel: "Autenticazione",
+        mbimAuthLabel: "Autenticazione",
+        qmiAuthLabel: "Autenticazione",
+        btnCopy: "Copia APN",
+        btnReboot: "Riavvia router",
+        btnApply: "Applica configurazione",
+        btnRestartNetwork: "Riavvia WAN",
+        apnNone: "Nessun APN selezionato.",
+        copied: "APN copiato"
+      },
+      en: {
+        mainTitle: "APN",
+        sectionTitle: "APN Configuration on WAN (QMI)",
+        mbimSectionTitle: "APN Configuration on WAN (MBIM)",
+        apnLabel: "Select APN",
+        mbimApnLabel: "Select APN",
+        ipLabel: "IP Type",
+        mbimIpLabel: "IP Type",
+        pinLabel: "PIN (optional)",
+        mmPinLabel: "SIM PIN (optional)",
+        mbimPinLabel: "SIM PIN (optional)",
+        mmAuthLabel: "Authentication",
+        mbimAuthLabel: "Authentication",
+        qmiAuthLabel: "Authentication",
+        btnCopy: "Copy APN",
+        btnReboot: "Reboot router",
+        btnApply: "Apply configuration",
+        btnRestartNetwork: "Restart WAN",
+        apnNone: "No APN selected.",
+        copied: "APN copied"
+      }
+    };
+
+    function clearAllMessages() {
+      const messageIds = ["applyMessage", "mmMessage", "mbimMessage"];
+      messageIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.add("hidden");
+          el.textContent = "";
+        }
+      });
+    }
+
+    function checkModeSelection() {
+      selectedMode = document.getElementById("modeSelect").value;
+      document.getElementById("langSelect").value = "";
+      document.getElementById("languageSelect").classList.remove("hidden");
+      document.getElementById("mainTitleWrapper").classList.add("hidden");
+      document.getElementById("qmiForm").classList.add("hidden");
+      document.getElementById("modemMessage").classList.add("hidden");
+      document.getElementById("mbimForm").classList.add("hidden");
+      clearAllMessages();
+    }
+
+    function checkFormDisplay() {
+      const lang = document.getElementById("langSelect").value;
+      if (!selectedMode || !lang) return;
+
+      document.getElementById("languageSelect").classList.add("hidden");
+      document.getElementById("mainTitleWrapper").classList.remove("hidden");
+      clearAllMessages();
+
+      document.getElementById("qmiForm").classList.add("hidden");
+      document.getElementById("modemMessage").classList.add("hidden");
+      document.getElementById("mbimForm").classList.add("hidden");
+
+      if (selectedMode === "QMI") {
+        document.getElementById("qmiForm").classList.remove("hidden");
+        setLanguage(lang);
+      } else if (selectedMode === "MODEMMANAGER") {
+        document.getElementById("modemMessage").classList.remove("hidden");
+        setLanguage(lang);
+      } else if (selectedMode === "MBIM") {
+        document.getElementById("mbimForm").classList.remove("hidden");
+        setLanguage(lang);
+      }
+    }
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+      document.getElementById("mainTitle").textContent = t.mainTitle;
+      document.getElementById("sectionTitle").textContent = t.sectionTitle;
+      document.getElementById("mbimSectionTitle").textContent = t.mbimSectionTitle;
+      document.getElementById("apnLabel").textContent = t.apnLabel;
+      document.getElementById("mbimApnLabel").textContent = t.mbimApnLabel;
+      document.getElementById("ipLabel").textContent = t.ipLabel;
+      document.getElementById("mbimIpLabel").textContent = t.mbimIpLabel;
+      document.getElementById("mmAuthLabel").textContent = t.mmAuthLabel;
+      document.getElementById("mbimAuthLabel").textContent = t.mbimAuthLabel;
+      document.getElementById("qmiAuthLabel").textContent = t.qmiAuthLabel;
+      document.getElementById("pinLabel").textContent = t.pinLabel;
+      document.getElementById("mmPinLabel").textContent = t.mmPinLabel;
+      document.getElementById("mbimPinLabel").textContent = t.mbimPinLabel;
+      document.getElementById("btnCopy").textContent = t.btnCopy;
+      document.getElementById("btnReboot").textContent = t.btnReboot;
+      document.getElementById("btnApply").textContent = t.btnApply;
+      document.getElementById("btnRestartNetwork").textContent = t.btnRestartNetwork;
+      document.getElementById("apnText").textContent = t.apnNone;
+      document.getElementById("mmApnText").textContent = t.apnNone;
+      document.getElementById("mbimApnText").textContent = t.apnNone;
+    }
+
+    function updateApn() {
+      const apn = document.getElementById("apnSelect").value;
+      const lang = document.getElementById("langSelect").value || "it";
+      const fallback = translations[lang].apnNone;
+      document.getElementById("apnText").textContent = apn || fallback;
+      document.getElementById("applyMessage").classList.add("hidden");
+    }
+
+    function syncModemApn() {
+      const selected = document.getElementById("mmApnSelect").value;
+      const lang = document.getElementById("langSelect").value || "it";
+      const fallback = translations[lang].apnNone;
+      document.getElementById("mmApn").value = selected;
+      document.getElementById("mmApnText").textContent = selected || fallback;
+      document.getElementById("mmMessage").classList.add("hidden");
+    }
+
+    function updateMbimApn() {
+      const apn = document.getElementById("mbimApnSelect").value;
+      const lang = document.getElementById("langSelect").value || "it";
+      const fallback = translations[lang].apnNone;
+      document.getElementById("mbimApnText").textContent = apn || fallback;
+      document.getElementById("mbimMessage").classList.add("hidden");
+    }
+
+    function fallbackCopyText(text, msgElement, lang) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const ok = document.execCommand('copy');
+        msgElement.textContent = ok
+          ? (lang === "it" ? "APN copiato negli appunti!" : "APN copied to clipboard!")
+          : (lang === "it" ? "Copia fallita" : "Copy failed");
+        msgElement.className = ok ? "alert alert-success" : "alert alert-error";
+      } catch (e) {
+        msgElement.textContent = lang === "it" ? "Errore durante la copia" : "Copy error";
+        msgElement.className = "alert alert-error";
+      }
+
+      document.body.removeChild(textArea);
+      msgElement.classList.remove("hidden");
+    }
+
+    // === GESTIONE PULSANTI "APPLICA" ===
+
+    document.getElementById("btnApply").onclick = function() {
+      applyConfig("QMI", "apnSelect", "pdptype", "qmiAuth", "pincode", "applyMessage");
+    };
+
+    document.getElementById("btnApplyMM").onclick = function() {
+      applyConfig("MODEMMANAGER", "mmApnSelect", "mmIpType", "mmAuth", "mmPincode", "mmMessage", "mmMode");
+    };
+
+    document.getElementById("btnApplyMBIM").onclick = function() {
+      applyConfig("MBIM", "mbimApnSelect", "mbimPdptype", "mbimAuth", "mbimPincode", "mbimMessage");
+    };
+
+    function applyConfig(mode, apnId, ipId, authId, pinId, msgId, modeId = null) {
+      const apn = document.getElementById(apnId).value;
+      const pdptype = document.getElementById(ipId).value;
+      const auth = document.getElementById(authId).value || "none"; // <-- valore predefinito
+      const pincode = document.getElementById(pinId).value;
+      const lang = document.getElementById("langSelect").value || "it";
+      const msg = document.getElementById(msgId);
+      msg.classList.add("hidden");
+
+      let endpoint, payload;
+
+      if (mode === "QMI") {
+        endpoint = "/cgi-bin/set_apn";
+        payload = { apn, pdptype, auth, pincode };
+      } else if (mode === "MODEMMANAGER") {
+        const modemMode = document.getElementById(modeId).value;
+        endpoint = "/cgi-bin/set_apn_modemmanager";
+        payload = { apn, pdptype, auth, mode: modemMode, pincode };
+      } else if (mode === "MBIM") {
+        endpoint = "/cgi-bin/set_apn_mbim";
+        payload = { apn, pdptype, auth, pincode }; // <-- identico a QMI
+      } else {
+        msg.textContent = lang === "it" ? "Modalità non supportata" : "Unsupported mode";
+        msg.className = "alert alert-error";
+        msg.classList.remove("hidden");
+        return;
+      }
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(r => r.json())
+        .then(data => {
+          let successMsg, errorMsg;
+          if (mode === "QMI") {
+            successMsg = lang === "it" ? "Configurazione Applicata!" : "Configuration Applied!";
+            errorMsg = lang === "it" ? "WAN non configurata con QMI" : "WAN not configured with QMI";
+          } else if (mode === "MODEMMANAGER") {
+            successMsg = lang === "it" ? "Configurazione ModemManager Applicata!" : "ModemManager Configuration Applied!";
+            errorMsg = lang === "it" ? "WAN non configurata con ModemManager" : "WAN not configured with ModemManager";
+          } else if (mode === "MBIM") {
+            successMsg = lang === "it" ? "Configurazione MBIM Applicata!" : "MBIM Configuration Applied!";
+            errorMsg = lang === "it" ? "WAN non configurata con MBIM" : "WAN not configured with MBIM";
+          }
+
+          msg.textContent = data.status === "ok" ? successMsg : (data.error || errorMsg);
+          msg.className = data.status === "ok" ? "alert alert-success" : "alert alert-error";
+          msg.classList.remove("hidden");
+        })
+        .catch(() => {
+          msg.textContent = lang === "it" 
+            ? "Errore: impossibile applicare la configurazione" 
+            : "Error: failed to apply configuration";
+          msg.className = "alert alert-error";
+          msg.classList.remove("hidden");
+        });
+    }
+
+    // === GESTIONE PULSANTI "COPIA" ===
+    ["btnCopy", "btnCopyMM", "btnCopyMBIM"].forEach((id, i) => {
+      const selectId = ["apnSelect", "mmApnSelect", "mbimApnSelect"][i];
+      const targets = ["applyMessage", "mmMessage", "mbimMessage"];
+      document.getElementById(id).onclick = function() {
+        const apn = document.getElementById(selectId)?.value;
+        const lang = document.getElementById("langSelect").value || "it";
+        const msg = document.getElementById(targets[i]);
+        msg.classList.add("hidden");
+        if (!apn) {
+          msg.textContent = lang === "it" ? "Nessun APN selezionato" : "No APN selected";
+          msg.className = "alert alert-error";
+          msg.classList.remove("hidden");
+          return;
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(apn).then(() => {
+            msg.textContent = lang === "it" ? "APN copiato negli appunti!" : "APN copied to clipboard!";
+            msg.className = "alert alert-success";
+            msg.classList.remove("hidden");
+          }).catch(() => fallbackCopyText(apn, msg, lang));
+        } else {
+          fallbackCopyText(apn, msg, lang);
+        }
+      };
+    });
+
+    // === GESTIONE PULSANTI "RIAVVIA" ===
+    function restartWan(targetMsgId = "applyMessage") {
+      const lang = document.getElementById("langSelect").value || "it";
+      const msg = document.getElementById(targetMsgId);
+      msg.classList.add("hidden");
+
+      fetch("/cgi-bin/system_action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "restart_wan" })
+      })
+        .then(r => r.json())
+        .then(data => {
+          msg.textContent = data.message || (lang === "it" ? "Errore durante l'operazione" : "Error during operation");
+          msg.className = data.status === "ok" ? "alert alert-success" : "alert alert-error";
+          msg.classList.remove("hidden");
+        })
+        .catch(() => {
+          msg.textContent = lang === "it" ? "WAN non configurata con QMI, ModemManager o MBIM" : "WAN not configured with QMI, ModemManager or MBIM";
+          msg.className = "alert alert-error";
+          msg.classList.remove("hidden");
+        });
+    }
+
+    function rebootRouter(targetMsgId = "applyMessage") {
+      const lang = document.getElementById("langSelect").value || "it";
+      const msg = document.getElementById(targetMsgId);
+      msg.classList.add("hidden");
+
+      fetch("/cgi-bin/system_action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reboot_router" })
+      })
+        .then(r => r.json())
+        .then(data => {
+          msg.textContent = data.message || (lang === "it" ? "Errore durante l'operazione" : "Error during operation");
+          msg.className = data.status === "ok" ? "alert alert-success" : "alert alert-error";
+          msg.classList.remove("hidden");
+        })
+        .catch(() => {
+          msg.textContent = lang === "it" ? "WAN non configurata con QMI, ModemManager o MBIM" : "WAN not configured with QMI, ModemManager or MBIM";
+          msg.className = "alert alert-error";
+          msg.classList.remove("hidden");
+        });
+    }
+
+    document.getElementById("btnRestartNetwork").onclick = () => restartWan("applyMessage");
+    document.getElementById("btnReboot").onclick = () => rebootRouter("applyMessage");
+    document.getElementById("btnRestartNetworkMM").onclick = () => restartWan("mmMessage");
+    document.getElementById("btnRebootMM").onclick = () => rebootRouter("mmMessage");
+    document.getElementById("btnRestartNetworkMBIM").onclick = () => restartWan("mbimMessage");
+    document.getElementById("btnRebootMBIM").onclick = () => rebootRouter("mbimMessage");
+  </script>
+</body>
+</html>

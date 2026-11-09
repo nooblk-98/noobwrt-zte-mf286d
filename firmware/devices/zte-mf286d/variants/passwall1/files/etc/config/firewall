@@ -1,0 +1,25 @@
+config defaults
+    option input 'ACCEPT'
+    option output 'ACCEPT'
+    option forward 'REJECT'
+    option syn_flood '1'
+
+config zone
+    option name 'lan'
+    option network 'lan'
+    option input 'ACCEPT'
+    option output 'ACCEPT'
+    option forward 'ACCEPT'
+
+config zone
+    option name 'wan'
+    option network 'wan wan6'
+    option input 'REJECT'
+    option output 'ACCEPT'
+    option forward 'REJECT'
+    option masq '1'
+    option mtu_fix '1'
+
+config forwarding
+    option src 'lan'
+    option dest 'wan'

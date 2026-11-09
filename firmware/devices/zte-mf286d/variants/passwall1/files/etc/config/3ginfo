@@ -1,0 +1,4 @@
+config 3ginfo
+        option website 'https://lteitaly.it/internal/map.php#bts='
+        option network 'wan'
+        option device '/dev/ttyUSB1'

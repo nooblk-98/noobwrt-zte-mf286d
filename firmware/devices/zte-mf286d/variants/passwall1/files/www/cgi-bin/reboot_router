@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "Content-Type: application/json"
+echo ""
+
+echo '{"message":"Riavvio del router avviato correttamente"}'
+
+(sleep 1; reboot) &

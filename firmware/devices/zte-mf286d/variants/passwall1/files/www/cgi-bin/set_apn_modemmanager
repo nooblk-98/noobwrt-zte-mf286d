@@ -1,0 +1,76 @@
+#!/bin/sh
+
+echo "Content-Type: application/json"
+echo ""
+
+read input
+
+# Funzione per estrarre valori JSON (compatibile con busybox)
+get_json_value() {
+  echo "$input" | grep -o "\"$1\":\"[^\"]*\"" | cut -d':' -f2 | tr -d '"'
+}
+
+apn=$(get_json_value "apn")
+ip_type=$(get_json_value "pdptype")
+auth=$(get_json_value "auth")
+mode=$(get_json_value "mode")
+pincode=$(get_json_value "pincode")   # Può essere vuoto
+
+# Verifica che la WAN usi modemmanager
+if ! uci get network.wan.proto >/dev/null 2>&1 || [ "$(uci get network.wan.proto)" != "modemmanager" ]; then
+  echo '{"status":"error","message":"WAN non configurata con ModemManager"}'
+  exit 0
+fi
+
+# === PULIZIA: rimuovi tutti i campi gestiti (incluso pincode, perché lo gestiamo esplicitamente) ===
+uci delete network.wan.apn 2>/dev/null
+uci delete network.wan.ip_type 2>/dev/null
+uci delete network.wan.auth 2>/dev/null
+uci delete network.wan.allowed_mode 2>/dev/null
+uci delete network.wan.pincode 2>/dev/null  # ? Lo rimuoviamo sempre qui, poi lo reimpostiamo se serve
+
+# Rimuovi opzioni legacy
+uci delete network.wan.iptype 2>/dev/null
+uci delete network.wan.pdptype 2>/dev/null
+uci delete network.wan.allowedauth 2>/dev/null
+
+# === IMPOSTA I VALORI ===
+
+# APN (con fallback)
+if [ -n "$apn" ]; then
+  uci set network.wan.apn="$apn"
+else
+  uci set network.wan.apn="internet"
+fi
+
+# Tipo IP
+case "$ip_type" in
+  ipv4|ipv6|ipv4v6) uci set network.wan.ip_type="$ip_type" ;;
+  *) uci set network.wan.ip_type="ipv4" ;;
+esac
+
+# Autenticazione
+case "$auth" in
+  none|pap|chap) uci set network.wan.auth="$auth" ;;
+  *) uci set network.wan.auth="none" ;;
+esac
+
+# Modalità banda
+case "$mode" in
+  5g) uci set network.wan.allowed_mode="5g" ;;
+  4g) uci set network.wan.allowed_mode="4g" ;;
+  3g) uci set network.wan.allowed_mode="3g" ;;
+  2g) uci set network.wan.allowed_mode="2g" ;;
+  auto|any) uci set network.wan.allowed_mode="any" ;;
+  *) uci set network.wan.allowed_mode="any" ;;
+esac
+
+# ? PIN: imposta SOLO se non vuoto
+if [ -n "$pincode" ]; then
+  uci set network.wan.pincode="$pincode"
+fi
+
+# Salva
+uci commit network
+
+echo '{"status":"ok","message":"Configurazione ModemManager applicata con successo"}'

@@ -1,0 +1,2 @@
+# ZTE MF286D (ipq40xx/generic) - no extra kernel symbols required.
+# Package selection lives in packages.json; device defaults live in files/.
