@@ -14,8 +14,8 @@
 | USB | 1x USB 2.0 external, 1x USB 3.0 internal (modem) |
 | Serial console | X8 header, 115200 8N1 |
 
-Source: upstream OpenWrt support commit for `zte_mf286d`
-(`a91ab8bc05b737d7e14976aaf929a71ea37fa1c6`).
+Sources: the [OpenWrt device page](https://openwrt.org/toh/zte/mf286d) and the
+upstream support commit for `zte_mf286d` (`a91ab8bc05b737d7e14976aaf929a71ea37fa1c6`).
 
 ## Network layout
 

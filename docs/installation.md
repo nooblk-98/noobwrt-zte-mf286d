@@ -5,6 +5,11 @@ This page covers both cases:
 - **A router still on the official ZTE firmware** — you must get OpenWrt onto it first.
 - **A router already running OpenWrt / NoobWRT** — a normal sysupgrade.
 
+!!! info "Official reference"
+    These instructions follow the upstream OpenWrt device page:
+    **[openwrt.org/toh/zte/mf286d](https://openwrt.org/toh/zte/mf286d)**. If anything
+    here disagrees with the wiki, the wiki is authoritative.
+
 !!! note "Before you flash"
     - Back up the original partitions if you may ever want to return to stock.
       At minimum: `mtd2` (MAC/ART), `mtd8` (`web`), `mtd9` (`rootfs`).
@@ -52,12 +57,16 @@ for `ipq40xx/generic` `zte_mf286d`.
 
 ### 1. Get an initramfs image
 
-Use the OpenWrt release initramfs for the same version as the build you intend to
-install, for example:
+Every NoobWRT build publishes one next to the sysupgrade image:
 
 ```text
-openwrt-25.12.x-ipq40xx-generic-zte_mf286d-initramfs-fit-zImage.itb
+openwrt-ipq40xx-generic-zte_mf286d-initramfs-zImage.itb
 ```
+
+This is the same image the wiki lists as *Firmware OpenWrt Install*. If you only have
+an older release, use the matching file from
+[downloads.openwrt.org](https://downloads.openwrt.org/releases/) for
+`ipq40xx/generic`.
 
 Place it in the root of your TFTP server. This example uses `192.168.1.3` for the
 server and `192.168.1.72` for the router.
