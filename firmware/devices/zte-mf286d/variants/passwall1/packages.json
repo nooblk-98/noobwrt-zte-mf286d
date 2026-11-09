@@ -2,6 +2,7 @@
   "add": [
     "luci",
     "luci-app-package-manager",
+    "luci-theme-noobwrt",
     "luci-app-3ginfo-lite",
     "luci-app-sms-tool-js",
     "luci-app-passwall",

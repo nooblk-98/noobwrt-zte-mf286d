@@ -6,7 +6,7 @@
     "board": "zte_mf286d",
     "openwrt": "25.12.4"
   },
-  "note": "Device defaults mirrored from the reference ZTE MF286D image. Modes are normalized (600 for private configs, 755 for executable helpers) and restored by hooks/overlay.sh.",
+  "note": "Device defaults mirrored from the reference ZTE MF286D image, plus the NoobWRT theme defaults (luci config + 30_luci-theme-noobwrt). Modes are normalized (600 for private configs, 755 for executable helpers) and restored by hooks/overlay.sh.",
   "files": {
     "etc/banner": {
       "sha256": "a3fd220ae4dd5c5d193949cf2aa03172b9bb5c2f1e0c66052d317ae5ceb74293",
@@ -29,7 +29,7 @@
       "mode": 420
     },
     "etc/config/luci": {
-      "sha256": "60078f7c02ed91d23092c9b75cb9ea5c8ee39f7727def813c8201f8e48a296f4",
+      "sha256": "4d4ccd15c1bb3e144d43192adf55896c2aae2d7633b496613a4a37ee3a50c5da",
       "mode": 420
     },
     "etc/config/modemband": {
@@ -58,6 +58,10 @@
     },
     "etc/init.d/my_new_sms": {
       "sha256": "c601d851655f68ed6250ec4d82da88d8b4aa2f2f31dbfdb9920db3e8e756811b",
+      "mode": 493
+    },
+    "etc/uci-defaults/30_luci-theme-noobwrt": {
+      "sha256": "b48dc9b1ea0798f1ab5fa4c0a086b74c93b04fa4d84abe3d09cf0402a48c402e",
       "mode": 493
     },
     "etc/uci-defaults/off_sms.sh": {

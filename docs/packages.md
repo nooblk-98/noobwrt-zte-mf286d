@@ -14,6 +14,7 @@ and `uqmi`.
 ```text
 luci
 luci-app-package-manager
+luci-theme-noobwrt
 luci-app-3ginfo-lite
 luci-app-sms-tool-js
 luci-app-passwall
@@ -166,6 +167,8 @@ wpad-basic-mbedtls
 
 - `dnsmasq-full` replaces `dnsmasq` so PassWall's `ipset`/`nftset` support works.
 - `wpad-mbedtls` replaces `wpad-basic-mbedtls` for WPA3 and 802.11w support.
+- `luci-theme-noobwrt` is the default theme; `/etc/config/luci` points `mediaurlbase` at
+  `/luci-static/noobwrt` and `etc/uci-defaults/30_luci-theme-noobwrt` seeds the toolbar.
 - The reference image also included `luci-app-modemband`, `apn-web` and
   `telegramWrt`. `luci-app-modemband` has no maintained source feed for 25.12, and
   `apn-web` / `telegramWrt` are binary-only; the APN page assets are shipped in the

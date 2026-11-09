@@ -10,6 +10,12 @@ sensible Wi-Fi and firewall defaults, and a small set of modem tools.
     This repository ships a single reviewed variant, **passwall1**. There is no
     PassWall 2 build for the MF286D.
 
+!!! success "NoobWRT theme"
+    The **NoobWRT theme** is the default LuCI UI. Only the toolbar entries this
+    build actually provides are enabled (Home, Modem, SMS, Wireless, Firewall,
+    VPN, System Log, Settings); device defaults such as hostname, timezone,
+    network and LEDs are not overridden.
+
 !!! warning "Reference image defaults"
     The device overlay reproduces the defaults of the community ZTE MF286D image
     (`sysupgrade-zte_mf286d-20260618-1120.bin`). That includes Wi-Fi country `IT`

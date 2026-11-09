@@ -1,6 +1,6 @@
 config core main
 	option lang auto
-	option mediaurlbase /luci-static/bootstrap
+	option mediaurlbase /luci-static/noobwrt
 	option resourcebase /luci-static/resources
 	option ubuspath /ubus/
 	
@@ -23,6 +23,7 @@ config internal ccache
 	option enable 1
 		
 config internal themes
+	option NoobWrt '/luci-static/noobwrt'
 
 config internal apply
 	option rollback 90

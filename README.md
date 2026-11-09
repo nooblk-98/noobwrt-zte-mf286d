@@ -50,6 +50,7 @@ This repository ships one reviewed variant: **ZTE MF286D / PassWall 1**.
 - **WireGuard**, `dnsmasq-full`, nftables firewall4 and PassWall's tproxy kernel modules
 - **Monitoring and tooling:** `htop`, `tcpdump`, `jq`, `curl`, `wget-ssl`, `bash`, coreutils
 - **SMS LED helper** and band-lock defaults carried over from the reference MF286D image
+- **NoobWRT theme** enabled by default (toolbar tuned to this build's apps)
 
 ## 🚀 Quick Install
 
@@ -81,7 +82,7 @@ reference ZTE MF286D image and reproduces its defaults:
 | WiFi 5 GHz | `radio1`, channel auto, VHT80, SSID `OpenWRT-5Ghz` |
 | Country | `IT` (change in LuCI → Network → Wireless) |
 | SSH | dropbear on port 22, password auth enabled |
-| LuCI | bootstrap theme, port 80/443 |
+| LuCI | **NoobWRT theme** (default), port 80/443 |
 
 Change the WiFi country before using the router outside Italy.
 

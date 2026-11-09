@@ -42,6 +42,9 @@ What is carried over:
 - `/etc/uci-defaults/*` — the reference image's helper scripts
 - `/sbin/sms_led.sh`, `/sbin/smstool_led.sh`, `/etc/init.d/my_new_sms` — SMS LED helper
 - `/www/apn.html`, `/www/logo-apnweb.jpg`, `/www/cgi-bin/*` — APN web page assets
+- `/etc/config/luci` + `/etc/uci-defaults/30_luci-theme-noobwrt` — NoobWRT theme as the
+  default LuCI theme, with a toolbar limited to apps present in this build (no AW1000
+  hostname/timezone/LED/network settings are imported)
 
 Not carried over: `telegramWrt` (binary-only package) and the
 `luci-app-modemband` application (no maintained source feed for 25.12). The
