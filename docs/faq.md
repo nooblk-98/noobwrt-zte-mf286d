@@ -8,8 +8,13 @@ set.
 
 ## How do I install this on a router that still has the ZTE firmware?
 
-Follow [Installation](installation.md): connect the serial console to the X8 header,
-boot an initramfs over TFTP, remove the stock UBI volumes, then `sysupgrade -n`.
+Two paths are documented in [Installation](installation.md):
+
+- **UART + TFTP** (recommended) — serial console on the X8 header, boot an
+  initramfs, remove the stock UBI volumes, then `sysupgrade -n`.
+- **No serial cable** (community) — flash the `install/root_uImage` container from
+  the build with ZTE's `ZTE_Sales_Update_Framework.exe`. Windows-only and limited by
+  the stock kernel/rootfs sizes.
 
 ## Which firmware file should I download?
 
