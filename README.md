@@ -63,8 +63,7 @@ Upgrading from an existing OpenWrt / NoobWRT installation, use the **sysupgrade*
 4. Wait for the router to reboot, then log in again at `http://192.168.1.1`.
 
 **Coming from the official ZTE firmware?** The router cannot take a sysupgrade image
-directly. Use the [Installation guide](docs/installation.md): UART + TFTP (recommended)
-or the community no-cable method that rebuilds `root_uImage` for ZTE's update tool.
+directly. Use the [Installation guide](docs/installation.md) — serial console + TFTP.
 
 > [!CAUTION]
 > Flashing third-party firmware may void your warranty and can brick your device if interrupted. Ensure stable power and proceed at your own risk. If something goes wrong, see the [Recovery guide](docs/recovery.md).
