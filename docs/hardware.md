@@ -4,15 +4,21 @@
 
 | Component | Detail |
 |---|---|
-| SoC | Qualcomm IPQ4019 (ARM Cortex-A7, 4 cores) |
+| SoC | Qualcomm IPQ4019, 4x ARM Cortex-A7 @ 715 MHz |
 | RAM | 256 MB |
-| Flash | 128 MB NAND + 2 MB NOR |
-| WLAN 2.4 GHz | QCA4019, 802.11b/g/n, 2x2:2 |
-| WLAN 5 GHz | QCA4019, 802.11a/n/ac, 2x2:2 |
+| Flash | 128 MB NAND + 2 MB SPI NOR |
+| Switch | Qualcomm QCA8075, 4x Gigabit |
+| WLAN 2.4 GHz | IPQ4019 radio, 802.11b/g/n, 2x2:2 |
+| WLAN 5 GHz | IPQ4019 radio, 802.11a/n/ac, 2x2:2 |
 | LTE | mPCIe Cat 12 modem (MDM9250), QMI |
-| Ethernet | 4x Gigabit (`lan1` is the WAN port by default) |
+| Ethernet | 4x Gigabit — WAN/LAN1 is the WAN port, LAN2-4 are LAN |
 | USB | 1x USB 2.0 external, 1x USB 3.0 internal (modem) |
+| RJ11 | 2x FXS phone ports — **not supported** in OpenWrt (`fxs`, `volte`) |
+| Buttons | 2: `reset`, `ses` |
+| LEDs | 2 (the rest are driven by the modem firmware) |
+| Power | 12 V, 2 A |
 | Serial console | X8 header, 115200 8N1 |
+| OpenWrt support | since 22.03.0 (commit `a91ab8bc05b7`) |
 
 Sources: the [OpenWrt device page](https://openwrt.org/toh/zte/mf286d) and the
 upstream support commit for `zte_mf286d` (`a91ab8bc05b737d7e14976aaf929a71ea37fa1c6`).
@@ -55,6 +61,18 @@ warns above 25.5 MB.
 For reference, the packages that will not fit: `sing-box` alone is 15.3 MiB and
 `xray-core` is 10.8 MiB compressed. That is why the PassWall core is **not in the
 image** — it is downloaded into RAM at boot (about 25 MB of tmpfs).
+
+## Switch (DSA)
+
+The board uses DSA, not swconfig. `eth0` is the internal CPU port; the rear-panel
+ports appear as `wan@eth0` and `lan2@eth0` … `lan4@eth0`:
+
+| Rear panel | Linux port |
+|---|---|
+| WAN/LAN 1 | `wan` |
+| LAN 2 | `lan2` |
+| LAN 3 | `lan3` |
+| LAN 4 | `lan4` |
 
 ## Known hardware limits
 

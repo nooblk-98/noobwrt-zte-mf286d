@@ -77,7 +77,8 @@ X8 header, `115200 8N1` — see the [UART Guide](uart-guide.md).
 
 ### 3. Boot the initramfs from U-Boot
 
-Connect the TFTP server to a LAN port, power on, and interrupt autoboot:
+Connect the TFTP host to **`lan2`, `lan3` or `lan4`** — do **not** use the shared
+WAN/LAN1 port. Power on and press **ESC** to stop U-Boot:
 
 ```text
 setenv serverip 192.168.1.3
@@ -107,6 +108,34 @@ sysupgrade -n /tmp/openwrt-ipq40xx-generic-zte_mf286d-squashfs-sysupgrade.bin
 ```
 
 An `ubi attach` error during the flash can be ignored while the process continues.
+
+### If NAND errors appear
+
+Two symptoms mean `/dev/mtd9` needs formatting:
+
+```text
+ubi0 warning: ... error -74 (ECC error) while reading 64 bytes from PEB 169:2048
+```
+
+or on reboot the router stops in U-Boot with:
+
+```text
+Nand Flash error. Status = 12336 NAND page read failed
+```
+
+Boot the factory/initramfs image again and run:
+
+```sh
+ubidetach -m 9
+ubiformat -y /dev/mtd9
+sysupgrade -n openwrt-ipq40xx-generic-zte_mf286d-squashfs-sysupgrade.bin
+```
+
+### Installing from LuCI instead
+
+With the router booted from the initramfs and the PC on Ethernet, open
+`http://openwrt.lan` (or `http://192.168.1.1`), leave the password blank and log in,
+then use **System → Backup / Flash Firmware** with the sysupgrade image.
 
 ---
 

@@ -36,6 +36,8 @@ First-time installation from stock firmware uses an **initramfs** image (see
 - Use the `sysupgrade.bin` image to upgrade an existing installation.
 - Current builds use OpenWrt 25.12 with the **APK** package manager (not opkg).
 - The variant pins OpenWrt `25.12.5`, the OpenWrt feeds and
-  `noobwrt-custom-feeds` to full commits; see `firmware.json`.
+  `noobwrt-custom-feeds` to full commits; see `firmware.json`. Upstream currently
+  lists `25.12.6` as the supported release for this device — this build stays on
+  `25.12.5` to match the NoobWRT AW1000 baseline, and bumps together.
 - Xray-core is pinned to `25.12.8` by `hooks/prepare.sh`. Do not upgrade it
   yourself; the bundled version is what the PassWall 1 build is tested with.

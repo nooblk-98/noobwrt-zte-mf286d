@@ -3,6 +3,16 @@
 The MF286D uses an mPCIe **Cat 12** LTE module (MDM9250 based) connected over QMI.
 OpenWrt talks to it through `/dev/cdc-wdm0`.
 
+## Supported bands
+
+The MDM9250 module reports **B1 B3 B7 B8 B20 B28 B32 B38** (varies with modem
+firmware). Cat 12: up to 3xCA down, 2xCA up.
+
+!!! warning "Stay on Nordic B12"
+    The OpenWrt device page reports QMI connection problems after updating to
+    **Nordic B14** (`BD_TELIA_MF286DV1.0.1B02` / `BD_TELIAMF286DV1.0.0B14`). Use
+    **B12** (`BD_TELIAMF286DV1.0.0B12`) unless you have a specific reason not to.
+
 ## Check the current modem version
 
 Connect to the modem AT port (usually `/dev/ttyUSB1`) with `picocom`, `minicom` or
