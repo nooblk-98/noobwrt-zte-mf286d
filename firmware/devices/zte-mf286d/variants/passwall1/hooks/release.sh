@@ -3,6 +3,10 @@ set -euo pipefail
 HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 bash "$HERE/generate-release.sh" "$BUILD_JSON" "$RUN_OUTPUT"
 
+# ZTE stock-flash container (no serial cable). Non-fatal: the firmware images and
+# release notes are already produced.
+sh "$HERE/scripts/make-root-uimage.sh" || echo "root_uimage: generation failed; firmware images unaffected" >&2
+
 # The MF286D rootfs partition is 29 MiB; 230 usable LEBs are 29,204,480 bytes and
 # the kernel is stored uncompressed inside that area. Refuse to publish an image
 # that cannot be flashed, and warn when the overlay would be starved.

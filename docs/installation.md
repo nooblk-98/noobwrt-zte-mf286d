@@ -152,16 +152,23 @@ that documents this method.
 
 ### Option 1 — use the prebuilt `root_uImage`
 
-The maintainer build `mf286d-first-20261109-1142` ships one:
+**Every build now produces one automatically.** The release hook runs
+`scripts/make-root-uimage.sh`, which downloads the original ZTE container, verifies
+it, wraps this build's kernel + rootfs and writes `install/root_uImage` next to the
+images:
 
 | | |
 |---|---|
-| File | `root_uImage` |
+| File | `install/root_uImage` |
 | Size | 38,797,312 bytes (exactly) |
-| SHA-256 | `8c5695f26d298a4ed111e6c7d3be06bb06c7660fdc3411c5335dd096d5504461` |
-| Location | private Drive → `zte-mf286d/install/mf286d-first-20261109-1142/root_uImage` |
+| Checksum | `install/root_uImage.sha256` in the same folder |
+| Location | private Drive → `zte-mf286d/passwall1/<build-tag>/install/` |
 
-1. Download `root_uImage` and check its size and SHA-256.
+The first build with this container is
+`zte-mf286d/install/mf286d-first-20261109-1142/root_uImage`
+(SHA-256 `8c5695f26d298a4ed111e6c7d3be06bb06c7660fdc3411c5335dd096d5504461`).
+
+1. Download `install/root_uImage` from the build folder and check its size and SHA-256.
 2. Open the ZTE package and replace the file in its `UPDATE/` folder with this one.
    The name must stay exactly `root_uImage` (no extension).
 3. Run `ZTE_Sales_Update_Framework.exe` **as Administrator** and follow its prompts.
