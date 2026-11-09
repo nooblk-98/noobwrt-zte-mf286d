@@ -15,9 +15,7 @@ To test the dispatch and delivery transport without compiling, run it once with
 - `logs/` — build log
 - `SHA256SUMS`, `result.json`, `COMPLETE.json` — checksums and receipts
 
-Access stays private; links do not grant access. See
-[build dispatch and verification](build-dispatch.md) for the layout and
-verification steps.
+Access stays private; links do not grant access.
 
 ## Images produced
 

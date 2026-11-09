@@ -24,9 +24,8 @@
 Select an unused **build_tag** in Actions → Build Firmware. Files are unzipped at
 `ROOT/passwall1/<build-tag>/`: open `images/` for individual firmware images,
 `metadata/` for build details, and `logs/` for logs. Checksums, result and
-completion receipt sit in the build-tag folder. Access remains private; see
-[setup and verification](docs/build-dispatch.md). No GitHub Actions artifacts or
-releases are created by this build workflow.
+completion receipt sit in the build-tag folder. Access remains private. No GitHub
+Actions artifacts or releases are created by this build workflow.
 
 > [!IMPORTANT]
 > Read the release notes before upgrading. Each release lists its build info, image variants and any **known issues** with workarounds.
@@ -37,7 +36,7 @@ releases are created by this build workflow.
 
 Firmware definitions, package selections, filesystem overlays and device-specific hooks are maintained in [`firmware/`](firmware/). Propose firmware changes here, not in the builder repository. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The separate [NoobWRT builder](https://github.com/NoobWRT/noobwrt-builder) provides the build engine and runner. Maintainers request builds from this repository's **Actions → Build Firmware** workflow; results are tied to exact firmware and builder commits. See [build dispatch and verification](docs/build-dispatch.md).
+The separate [NoobWRT builder](https://github.com/NoobWRT/noobwrt-builder) provides the build engine and runner. Maintainers request builds from this repository's **Actions → Build Firmware** workflow; results are tied to exact firmware and builder commits.
 
 This repository ships one reviewed variant: **ZTE MF286D / PassWall 1**.
 
