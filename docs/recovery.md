@@ -39,9 +39,45 @@ bootm $loadaddr
     If `sysupgrade -T` reports that the device is not supported by the image, do
     not run `sysupgrade -F`. Use the UART/TFTP path instead.
 
-## Returning to stock
+## Restoring the stock firmware
 
-Restoring ZTE stock firmware is not covered by this repository. Keep a full backup
-of the original partitions (taken before the first flash) if you may need to go
-back. The stock layout uses UBI volumes `ubi_rootfs` and `ubi_rootfs_data` on
-MTD 9; they are removed during the OpenWrt first-time install.
+There is no stock image in this repository. Restoring ZTE firmware needs a dump of
+your own unit (taken before flashing) or a matching regional dump.
+
+### From OpenWrt
+
+With a full dump of the stock partitions:
+
+```sh
+mtd write mtd8.bin /dev/mtd8     # stock web UI
+mtd write mtd9.bin /dev/mtd9     # stock rootfs
+reboot
+```
+
+The stock layout uses UBI volumes `ubi_rootfs` and `ubi_rootfs_data` inside the
+`rootfs` partition (MTD 9); the first-time OpenWrt install removes them.
+
+### Restoring the MAC address
+
+`mtd2` holds the MAC/calibration data. If it is lost or overwritten, Wi-Fi and
+Ethernet get invalid addresses. The MAC is the last 3 bytes of the `mtd2` dump
+with the ZTE OUI `D4:72:26`; the community has a
+[helper script](https://github.com/ilblogdicristiangallo/ZTE-MF286D-Generate-Mac-Address)
+that rebuilds a valid `mtd2.bin`, which is then written back with:
+
+```sh
+mtd write mtd2.bin /dev/mtd2
+reboot
+```
+
+!!! danger "Back up `mtd2` first"
+    There is no way to regenerate the factory calibration. Always keep a copy of
+    your own `mtd2` before the first flash.
+
+### Community stock dumps
+
+Regional dumps and the "Nordic B12" package circulate in the community (for
+example
+[Downgrade-Dump-ZTE-MF286D-Nordic-B12](https://github.com/ilblogdicristiangallo/Downgrade-Dump-ZTE-MF286D-Nordic-B12)).
+They are carrier/region specific. Writing another unit's `mtd2` clones its MAC —
+do not do that on a network where both devices will be present.

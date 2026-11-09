@@ -6,6 +6,17 @@ NoobWRT is a curated OpenWrt firmware build for the ZTE MF286D. It provides
 predictable defaults, PassWall 1, modem tooling and a small, maintained package
 set.
 
+## How do I install this on a router that still has the ZTE firmware?
+
+Two paths are documented in [Installation](installation.md):
+
+- **UART + TFTP** (recommended) — serial console on the X8 header, boot an
+  initramfs, remove the stock UBI volumes, then `sysupgrade -n`.
+- **Without a serial cable** (community, unofficial) — rebuild `root_uImage` from
+  the original ZTE file plus our `sysupgrade.bin` and flash it with ZTE's
+  `ZTE_Sales_Update_Framework.exe`. Windows-only, region-specific, and limited by
+  the stock kernel/rootfs size.
+
 ## Which firmware file should I download?
 
 Use the `sysupgrade` image from a maintainer build:
@@ -42,7 +53,7 @@ stable power. Recovery is possible over UART/TFTP (see [Recovery](recovery.md)).
 ## Can I revert to stock firmware?
 
 Only if you backed up the original partitions. This repository does not ship a
-stock-restore image. See [Recovery](recovery.md#returning-to-stock).
+stock-restore image. See [Recovery](recovery.md#restoring-the-stock-firmware).
 
 ## How do I lock LTE bands?
 
