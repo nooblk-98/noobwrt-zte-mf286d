@@ -16,6 +16,7 @@ nav:
   - Packages: packages.md
   - Additional Packages: additional-packages.md
   - Hardware: hardware.md
+  - Other MF286 models: related-devices.md
   - FAQ: faq.md
   - Contributing: contributing.md
   - License: license.md
