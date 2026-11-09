@@ -6,15 +6,28 @@ installation.
 
 ## Connector
 
-X8 is a 4-pin header. Pin order, from the pin closest to the `X8` silkscreen label
-to the farthest:
+X8 is a 4-pin header on the left edge of the main PCB (the side with the USB port
+and the reset button), next to the blue chassis edge.
 
-| Pin | Signal |
-|---|---|
-| 1 | VCC (3.3 V) — do not connect |
-| 2 | TX |
-| 3 | RX |
-| 4 | GND |
+![X8 UART header on the MF286D mainboard](images/mf286d-serial-console.jpg)
+
+Pin order, from the pin closest to the `X8` silkscreen label to the farthest:
+
+| Pin | Signal | Wire in the photo |
+|---|---|---|
+| 1 | VCC (3.3 V) — **do not connect** | red |
+| 2 | TX | orange |
+| 3 | RX | yellow |
+| 4 | GND | green |
+
+Board overview — `X8` sits at the left edge, roughly level with the middle of the
+board:
+
+![MF286D main PCB with X8 at the left edge](images/mf286d-main-pcb.jpg)
+
+!!! note "Photo credits"
+    Both photos are from the [OpenWrt wiki device page](https://openwrt.org/toh/zte/mf286d)
+    (CC BY-SA) and are reproduced here for offline reference.
 
 ## Serial settings
 
