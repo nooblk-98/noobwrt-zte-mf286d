@@ -1,0 +1,6 @@
+#!/bin/sh
+# Point PassWall at the RAM copy of the Xray core.
+uci -q get passwall.@global_app[0] >/dev/null 2>&1 || uci -q add passwall global_app
+uci -q set passwall.@global_app[0].xray_file='/tmp/xray'
+uci -q commit passwall
+exit 0

@@ -58,7 +58,6 @@
     "dns2socks",
     "dns2tcp",
     "microsocks",
-    "xray-core",
     "tcping",
     "resolveip",
     "odhcp6c",
@@ -70,7 +69,8 @@
     "curl",
     "wget-ssl",
     "ca-bundle",
-    "jq"
+    "jq",
+    "unzip"
   ],
   "remove": [
     "dnsmasq",

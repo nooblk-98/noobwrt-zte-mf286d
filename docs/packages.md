@@ -9,9 +9,29 @@ and `uqmi`.
 
 !!! warning "Size budget"
     The MF286D has a **29 MiB** firmware partition (about 24.5 MiB usable for the
-    rootfs after the kernel). The build is deliberately slim: Xray is the only
-    proxy core, and there are no NAS, Samba, NFS, media-server or desktop CLI
-    packages. See [Hardware](hardware.md#flash-and-image-size-budget).
+    rootfs after the kernel). The build is deliberately slim: **the Xray core is
+    not in the image** (see below), and there are no NAS, Samba, NFS, media-server
+    or desktop CLI packages. See [Hardware](hardware.md#flash-and-image-size-budget).
+
+## PassWall core: downloaded into RAM at boot
+
+`xray-core` is ~10.8 MiB compressed and does not fit alongside LuCI on this flash.
+Instead the image ships PassWall without a core and fetches one on boot:
+
+1. `/etc/init.d/passwall-core` (START=98) runs `/usr/sbin/passwall-core-fetch`.
+2. The fetcher waits for WAN, downloads
+   `Xray-linux-arm32-v7a.zip` from the official Xray release, unpacks it to
+   **`/tmp/xray`** (tmpfs = RAM) and verifies it runs.
+3. It sets `passwall.@global_app[0].xray_file=/tmp/xray` and restarts PassWall.
+
+Consequences:
+
+- **Internet is required after every reboot** to get a core. The LTE link works
+  without PassWall, so this is a download, not a bootstrap problem.
+- The core uses about 25 MB of RAM while running; the router has 256 MB.
+- If the download fails, the router still routes traffic normally — PassWall just
+  has no core until it succeeds (it retries for ~10 minutes).
+- To pin a different core or mirror, edit `/usr/sbin/passwall-core-fetch`.
 
 ## Added packages
 
@@ -60,16 +80,16 @@ ath10k-firmware-qca4019-ct
 wpad-mbedtls
 ```
 
-### PassWall 1 (Xray only)
+### PassWall 1 (core fetched at boot)
 
 ```text
 chinadns-ng
 dns2socks
 dns2tcp
 microsocks
-xray-core
 tcping
 resolveip
+unzip
 ```
 
 ### Firewall / nftables
@@ -126,6 +146,7 @@ ca-bundle
 jq
 ```
 
+
 ## Removed packages
 
 ```text
@@ -148,11 +169,12 @@ wpad-basic-mbedtls
 
 | Package | Why |
 |---|---|
+| `xray-core` | fetched into RAM at boot instead (10.8 MiB) |
 | `sing-box`, `v2ray-geoip`, `v2ray-geosite`, `haproxy` | ~21 MiB together; would not fit |
 | `luci-app-modemband` | no maintained source feed for 25.12 (config kept) |
 | `apn-web`, `telegramWrt` | binary-only upstream; APN page ships in the overlay |
 | samba4, nfs, minidlna, filemanager, sftp-server | NAS features not wanted on this build |
-| bash, coreutils, htop, tcpdump, gawk, nano, less, unzip, ethtool-full | desktop conveniences, cut to protect the size budget |
+| bash, coreutils, htop, tcpdump, gawk, nano, less, ethtool-full | desktop conveniences, cut to protect the size budget |
 
 ## Notes
 

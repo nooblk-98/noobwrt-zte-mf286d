@@ -3,7 +3,9 @@
 # LuCI PassWall pulls several proxy cores by default on arm. Only Xray is kept;
 # sing-box (15 MiB), GeoView, SmartDNS, HAProxy and the ShadowsocksR stack would
 # not fit in the firmware partition.
-CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y
+# Xray is NOT shipped: the core is downloaded into RAM at boot (see
+# usr/sbin/passwall-core-fetch and passwall.@global_app[0].xray_file).
+CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=n
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_SingBox=n
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Geoview=n
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_SmartDNS=n

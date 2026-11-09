@@ -45,6 +45,13 @@ limitation, not a NoobWRT choice.
 Yes. `lan1` is the WAN port. Set `network.wan` to `proto dhcp` on device `lan1`, or
 configure PPPoE there. The LTE modem then stays available as a second interface.
 
+## Why is there no Xray core in the firmware?
+
+The firmware partition is only 29 MiB and Xray is ~10.8 MiB compressed. The image
+ships PassWall without a core; `/etc/init.d/passwall-core` downloads it into RAM
+(`/tmp/xray`) after every boot. Internet is required once per boot. See
+[Packages](packages.md#passwall-core-downloaded-into-ram-at-boot).
+
 ## Is it safe to flash this firmware?
 
 Flashing firmware carries risk. Follow [Installation](installation.md) and ensure

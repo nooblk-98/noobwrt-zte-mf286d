@@ -53,7 +53,8 @@ for settings. The release hook fails the build above 27.85 MB of image payload a
 warns above 25.5 MB.
 
 For reference, the packages that will not fit: `sing-box` alone is 15.3 MiB and
-`xray-core` is 10.8 MiB compressed, so only one proxy core is shipped.
+`xray-core` is 10.8 MiB compressed. That is why the PassWall core is **not in the
+image** — it is downloaded into RAM at boot (about 25 MB of tmpfs).
 
 ## Known hardware limits
 

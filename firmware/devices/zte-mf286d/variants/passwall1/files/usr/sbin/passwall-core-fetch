@@ -1,0 +1,66 @@
+#!/bin/sh
+# Fetch the Xray core into RAM instead of shipping it in the 29 MiB firmware
+# partition. PassWall is pointed at /tmp/xray through passwall.@global_app[0].
+#
+# The core is ~25 MB unpacked, so it lives in tmpfs. It is downloaded again after
+# every reboot, which needs working WAN (the LTE link works without PassWall).
+
+set -u
+
+LOG_TAG="passwall-core"
+CORE="/tmp/xray"
+ASSET="Xray-linux-arm32-v7a.zip"
+URL="https://github.com/XTLS/Xray-core/releases/latest/download/${ASSET}"
+WORK="/tmp/passwall-core.d"
+RETRIES="${RETRIES:-40}"
+INTERVAL="${INTERVAL:-15}"
+
+log() {
+	logger -t "$LOG_TAG" "$*"
+	echo "$*"
+}
+
+set_core_path() {
+	uci -q get passwall.@global_app[0] >/dev/null 2>&1 || uci -q add passwall global_app
+	uci -q set passwall.@global_app[0].xray_file="$CORE"
+	uci -q commit passwall
+}
+
+wan_up() {
+	ping -c 1 -W 2 1.1.1.1 >/dev/null 2>&1 || ping -c 1 -W 2 8.8.8.8 >/dev/null 2>&1
+}
+
+fetch_core() {
+	mkdir -p "$WORK" || return 1
+	rm -f "$WORK/core.zip"
+	wget -q -O "$WORK/core.zip" "$URL" || return 1
+	unzip -o -q "$WORK/core.zip" -d "$WORK" || return 1
+	[ -s "$WORK/xray" ] || return 1
+	chmod 0755 "$WORK/xray"
+	"$WORK/xray" version >/dev/null 2>&1 || return 1
+	mv -f "$WORK/xray" "$CORE" || return 1
+	return 0
+}
+
+set_core_path
+
+if [ -x "$CORE" ]; then
+	log "xray core already present in RAM"
+	exit 0
+fi
+
+i=0
+while [ "$i" -lt "$RETRIES" ]; do
+	if wan_up && fetch_core; then
+		log "xray core fetched: $("$CORE" version 2>/dev/null | head -n1)"
+		/etc/init.d/passwall restart >/dev/null 2>&1
+		rm -rf "$WORK"
+		exit 0
+	fi
+	i=$((i + 1))
+	sleep "$INTERVAL"
+done
+
+rm -rf "$WORK"
+log "could not fetch the xray core after ${RETRIES} attempts; PassWall stays without a core"
+exit 1

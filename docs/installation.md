@@ -190,7 +190,10 @@ flash. Use path A instead.
 4. Configure the APN: `http://192.168.1.1/apn.html`, or LuCI →
    `Network` → `Interfaces` → `wan`. Defaults are QMI on `/dev/cdc-wdm0`, APN
    `internet`, IPv4.
-5. If the LTE link is unstable, update the modem firmware to **B12** first. The
+5. **PassWall core:** on first boot the router downloads the Xray core into RAM
+   (`/tmp/xray`). It needs working WAN for about a minute; check
+   `logread -e passwall-core`. See [Packages](packages.md#passwall-core-downloaded-into-ram-at-boot).
+6. If the LTE link is unstable, update the modem firmware to **B12** first. The
    MF286D community reports stability problems on older modem builds; the update is
    done from OpenWrt with `adb` plus AT commands on `/dev/ttyUSB1` (see
    [Modem Firmware](modem-firmware.md)).
