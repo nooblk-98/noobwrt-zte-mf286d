@@ -28,7 +28,21 @@ jobs:
       - name: Build site
         run: mkdocs build --strict
 
+      - name: Check Cloudflare credentials
+        id: creds
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CF_TOKEN" ] && [ -n "$CF_ACCOUNT" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Docs not published::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID are not set for this repository. The site was built successfully but was not deployed."
+          fi
+
       - name: Deploy to Cloudflare Pages
+        if: steps.creds.outputs.enabled == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
