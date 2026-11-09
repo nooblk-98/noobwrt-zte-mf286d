@@ -20,7 +20,7 @@ If the router does not boot at all, use the serial console and U-Boot. This is t
 same path used for first-time installation and is the most reliable way to recover
 the MF286D.
 
-1. Connect the X8 header at `115200 8N1` (see [UART Guide](uart-guide.md)).
+1. Connect the X8 header at `115200 8N1` (see [Installation](installation.md#2-connect-the-serial-console)).
 2. Serve an `initramfs` image over TFTP.
 3. In U-Boot:
 

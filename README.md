@@ -96,9 +96,8 @@ Full documentation: **[mf286d-docs.pages.dev](https://mf286d-docs.pages.dev)**
 | Guide | Description |
 |---|---|
 | [Getting Started](docs/getting-started.md) | First steps after flashing |
-| [Installation](docs/installation.md) | Flash via U-Boot, web UI or CLI |
+| [Installation](docs/installation.md) | Serial console (X8), U-Boot/TFTP, web UI or CLI |
 | [Recovery](docs/recovery.md) | Unbrick and restore your router |
-| [UART Guide](docs/uart-guide.md) | Serial console access (X8 connector) |
 | [Modem Firmware](docs/modem-firmware.md) | Modem information for the MF286D |
 | [Hardware](docs/hardware.md) | MF286D hardware specifications |
 | [Packages](docs/packages.md) | Included packages |
