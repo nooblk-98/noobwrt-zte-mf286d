@@ -12,24 +12,26 @@ not a public-repository test workflow. Full compilation uses validate_only=false
 All generated files are ordinary, individually downloadable Drive files:
 
     ROOT/
-      passwall1/
-        v2026-11-08-passwall1/
-          images/
-            openwrt-ipq40xx-generic-zte_mf286d-squashfs-sysupgrade.bin
-          metadata/
-            build.json
-            profiles.json
-            config
-            sources.lock.json
-            ...
-          logs/
-            build-<timestamp>-<id>.log
-          result.json
-          SHA256SUMS
-          PENDING.json
-          COMPLETE.json
+      zte-mf286d/
+        passwall1/
+          v2026-11-08-passwall1/
+            images/
+              openwrt-ipq40xx-generic-zte_mf286d-squashfs-sysupgrade.bin
+            metadata/
+              build.json
+              profiles.json
+              config
+              sources.lock.json
+              ...
+            logs/
+              build-<timestamp>-<id>.log
+            result.json
+            SHA256SUMS
+            PENDING.json
+            COMPLETE.json
 
-The exact layout is **ROOT/<variant>/<build-tag>/**. There is no device folder,
+The exact layout is **ROOT/<device>/<variant>/<build-tag>/**, so routers that share
+a variant name never collide. There is no
 ZIP, tarball, GitHub Actions artifact (including logs/validation proof), or
 release upload in this build path. Image names/formats come from the selected
 profile, not a hardcoded router or extension list. Open images/ for individual
