@@ -43,11 +43,26 @@ luci-app-package-manager
 luci-theme-noobwrt
 luci-app-3ginfo-lite
 luci-app-sms-tool-js
+luci-app-modemdata
+luci-app-netstat
+luci-app-ttyd
 luci-app-passwall
 luci-proto-qmi
 luci-proto-mbim
 luci-proto-modemmanager
 luci-proto-wireguard
+```
+
+### Modem tools
+
+```text
+modemdata
+```
+
+### Terminal / monitoring
+
+```text
+ttyd
 ```
 
 ### Modem / mobile broadband
@@ -145,7 +160,6 @@ wget-ssl
 ca-bundle
 jq
 ```
-
 
 ## Removed packages
 
