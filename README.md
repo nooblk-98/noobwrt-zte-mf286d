@@ -92,6 +92,8 @@ Change the WiFi country before using the router outside Italy.
 
 ## 📚 Documentation
 
+Full documentation: **[mf286d-docs.pages.dev](https://mf286d-docs.pages.dev)**
+
 | Guide | Description |
 |---|---|
 | [Getting Started](docs/getting-started.md) | First steps after flashing |
