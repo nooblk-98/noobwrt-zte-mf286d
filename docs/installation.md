@@ -103,54 +103,121 @@ An `ubi attach` error during the flash can be ignored while the process continue
 
 ## B. From stock ZTE firmware — without a serial cable (community method)
 
-The community method flashes a modified **`root_uImage`** through ZTE's own update
-tool. It avoids opening the case, but it depends on ZTE tooling and on your stock
-firmware variant.
+The ZTE bootloader will not take a sysupgrade image. It takes a **`root_uImage`**
+file through ZTE's own updater, so the OpenWrt kernel and rootfs are wrapped into
+that container first.
 
 !!! warning "Unofficial and variant-dependent"
-    This path is not maintained by OpenWrt or by this repository. The tool is
-    Windows-only, the package is built for Nordic/Telia units, and the kernel and
-    rootfs size limits (about 2.9 MB / 4 MB) come from the stock layout. A modern
-    25.12 image is larger than those limits; the builder script warns and continues,
-    but a kernel that is too large can leave the unit unbootable. Use path A if you
-    can.
+    The tool is Windows-only, the community package targets Nordic/Telia units, and
+    the stock volume sizes are smaller than a 25.12 image. The builder script warns
+    and continues; a kernel that is too large for the bootloader can leave the unit
+    unbootable. Without a serial cable there is no recovery path — have the
+    [UART guide](uart-guide.md) ready before you start.
 
-### How it works
+### What you need
 
-1. ZTE's `ZTE_Sales_Update_Framework.exe` flashes a file named `root_uImage` from
-   an `UPDATE/` folder.
-2. You rebuild that `root_uImage` from the **original** one plus an OpenWrt
-   `sysupgrade.bin` (kernel + rootfs), then let the ZTE tool write it.
+1. A Windows PC.
+2. The community package `zte mf286d Nordic to OPENWRT.7z.001 … .007` (~370 MB).
+   It contains `ZTE_Sales_Update_Framework.exe` and the original `root_uImage`.
+   Sources: [makebit/mf286d-openwrt](https://github.com/makebit/mf286d-openwrt)
+   (`resources/`) or the Google Drive link in that README.
+3. A `root_uImage` for the build you want — either the prebuilt one below, or build
+   it yourself.
 
-### Steps
+### Option 1 — use the prebuilt `root_uImage`
 
-1. Obtain the community package (`zte mf286d Nordic to OPENWRT.7z.00*`, split
-   archive) and extract it. It contains the ZTE update framework and the original
-   `root_uImage` (exactly 38,797,312 bytes).
-2. Get the NoobWRT `sysupgrade.bin` from a maintainer build.
-3. Build the flashable image with
-   [ZTE-MF286D-root_uImage-Builder](https://github.com/ilblogdicristiangallo/ZTE-MF286D-root_uImage-Builder):
+The maintainer build `mf286d-first-20261109-1142` ships one:
+
+| | |
+|---|---|
+| File | `root_uImage` |
+| Size | 38,797,312 bytes (exactly) |
+| SHA-256 | `8c5695f26d298a4ed111e6c7d3be06bb06c7660fdc3411c5335dd096d5504461` |
+| Location | private Drive → `zte-mf286d/install/mf286d-first-20261109-1142/root_uImage` |
+
+1. Download `root_uImage` and check its size and SHA-256.
+2. Open the ZTE package and replace the file in its `UPDATE/` folder with this one.
+   The name must stay exactly `root_uImage` (no extension).
+3. Run `ZTE_Sales_Update_Framework.exe` **as Administrator** and follow its prompts.
+4. Do not power off. The router reboots into OpenWrt in about 3–5 minutes.
+
+### Option 2 — build `root_uImage` yourself
+
+Any Linux box or WSL works. You need the original `root_uImage` (38,797,312 bytes)
+from the community package, plus the sysupgrade image from this build.
 
 ```sh
-# in a folder containing sysupgrade.bin and the original root_uImage
-chmod +x build_root_uImage.sh
-./build_root_uImage.sh
+sudo apt install mtd-utils
+# original container (from the builder repo's UPDATE folder)
+wget https://raw.githubusercontent.com/ilblogdicristiangallo/ZTE-MF286D-root_uImage-Builder/main/UPDATE/root_uImage.zip
+unzip root_uImage.zip                  # -> root_uImage, 38,797,312 bytes
+stat -c%s root_uImage                  # must print 38797312
+
+# unpack our sysupgrade image
+tar xf openwrt-ipq40xx-generic-zte_mf286d-squashfs-sysupgrade.bin
+mv sysupgrade-zte_mf286d/kernel kernel-new.bin
+mv sysupgrade-zte_mf286d/root   rootfs-new.squashfs
+
+cat > ubinize.cfg <<'EOF'
+[kernel]
+mode=ubi
+image=kernel-new.bin
+vol_id=0
+vol_type=dynamic
+vol_name=kernel
+vol_alignment=1
+
+[rootfs]
+mode=ubi
+image=rootfs-new.squashfs
+vol_id=1
+vol_type=dynamic
+vol_name=rootfs
+vol_alignment=1
+
+[rootfs_data]
+mode=ubi
+vol_id=2
+vol_type=dynamic
+vol_name=rootfs_data
+vol_flags=autoresize
+vol_alignment=1
+vol_size=1MiB
+EOF
+
+ubinize -o ubi-new.img -p 131072 -m 2048 -O 2048 ubinize.cfg
+truncate -s 30408704 ubi-new.img        # 29 MiB UBI area
+cp root_uImage root_uImage.new
+dd if=ubi-new.img of=root_uImage.new bs=1M seek=8 conv=notrunc
+mv root_uImage.new root_uImage
+stat -c%s root_uImage                   # must print 38797312
 ```
 
-   The script extracts `kernel` and `root` from the sysupgrade tar, rebuilds a UBI
-   image (`kernel`, `rootfs`, `rootfs_data`), inserts it at offset `0x800000` and
-   writes `root_uImage.new` (38,797,312 bytes).
+Alternatively run the upstream helper in a folder that contains `sysupgrade.bin`
+and `root_uImage`:
 
-4. Rename `root_uImage.new` to `root_uImage` and put it in the `UPDATE/` folder of
-   the ZTE package.
-5. Run `ZTE_Sales_Update_Framework.exe` and follow the tool.
-6. After the reboot you are in OpenWrt; install NoobWRT with `sysupgrade -n`, or
-   flash the NoobWRT sysupgrade image directly if the tool accepted it.
+```sh
+chmod +x build_root_uImage.sh && ./build_root_uImage.sh
+```
 
-A video walkthrough (Italian) exists:
-[ZTE MF286D — installare OpenWrt senza porta seriale](https://www.youtube.com/watch?v=UjoAHUQ3qYE).
+### What ends up inside the container
 
----
+| Volume | Content | Size |
+|---|---|---|
+| `kernel` | OpenWrt kernel (uncompressed) | 3.43 MiB (29 LEBs) |
+| `rootfs` | squashfs with LuCI, PassWall, modem tools | 13.73 MiB (114 LEBs) |
+| `rootfs_data` | overlay, `autoresize` | remainder (~10.5 MiB) |
+
+The container is 38,797,312 bytes with the UBI area at offset `0x800000`. The
+stock ZTE volumes were 23 LEBs (kernel) and 32 LEBs (rootfs); this build is
+larger, which is the main risk of this method.
+
+### After it boots
+
+You are already running the built firmware (kernel + rootfs come from the
+sysupgrade image). Continue with [After installation](#after-installation).
+
+Later upgrades use the normal sysupgrade path — no ZTE tool needed.
 
 ## C. From existing OpenWrt / NoobWRT — sysupgrade
 
