@@ -51,16 +51,6 @@ Not carried over: `telegramWrt` (binary-only package) and the
 `/etc/config/modemband` file is kept so settings survive if the app is installed
 later.
 
-## ZTE stock-flash container
-
-`variants/passwall1/scripts/make-root-uimage.sh` (called from `hooks/release.sh`)
-wraps the build's kernel and rootfs into a ZTE `root_uImage` so a router on stock
-firmware can be flashed without a serial cable. It downloads the original
-container (SHA-256 pinned), runs `ubinize` from the OpenWrt host tools, and writes
-`install/root_uImage` plus `install/root_uImage.sha256`. The builder delivers the
-`install/` tree with the images. Failure to fetch the original container is
-non-fatal: the firmware images are already produced.
-
 ## Adding another router
 
 Add a device/variant descriptor with its real OpenWrt target/subtarget/profile,
